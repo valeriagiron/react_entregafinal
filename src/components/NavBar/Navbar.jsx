@@ -1,41 +1,60 @@
 import {
-    Box,
-    Flex,
-    Avatar,
-    Text,
-    Button,
-    Menu,
-    MenuButton,
-    MenuList,
-    MenuItem,
-    MenuDivider,
-    useDisclosure,
-    useColorModeValue,
-    Stack,
-    useColorMode,
-    Center,
-  } from '@chakra-ui/react'
-  import { MoonIcon, SunIcon } from '@chakra-ui/icons'
-import CartWidget from './CartWidget';
-  
+  Box,
+  Flex,
+  Avatar,
+  Button,
+  Menu,
+  MenuButton,
+  MenuList,
+  MenuItem,
+  MenuDivider,
+  useColorModeValue,
+  Stack,
+  useColorMode,
+  Center,
+} from "@chakra-ui/react";
+import { MoonIcon, SunIcon } from "@chakra-ui/icons";
+import CartWidget from "../CartWidget/CartWidget";
+import useCategory from "../../hooks/useCategory";
+import { Link } from "react-router-dom";
+import logo from "../../assets/logonia.png"
 
 
-const Navbar = () => {
-const { colorMode, toggleColorMode } = useColorMode();
+const NavBar = () => {
+  const { colorMode, toggleColorMode } = useColorMode();
+
+  const { category } = useCategory();
 
 return (
         <>
           <Box bg={useColorModeValue('gray.100', 'gray.900')} px={4}>
             <Flex h={16} alignItems={'center'} justifyContent={'space-between'}>
-              <Box>ValStore</Box>
-    
+            <Box Link to="/" as={Link} cursor="pointer" style={{ marginLeft: 30 }}>
+                <img src={logo} alt="Logo" style={{ height: "50px" }} />
+          </Box>
+              <Box alignContent={"flex-start"} width={"100%"} marginLeft={30}>
+              <Menu>
+
+                  <MenuButton as={Link} cursor="pointer" style={{ marginLeft: 30 }}>
+                    Categorias
+                  </MenuButton>
+                  
+                  <MenuList height={"300px"} overflowY={"scroll"}>
+                    {category.map((category) => (
+                      <MenuItem key={category.slug}>
+                        <Link to={`/category/${category.slug}`}>{category.name}</Link>
+                      </MenuItem>
+                    ))}
+                  </MenuList>
+            </Menu>
+          </Box>
               <Flex alignItems={'center'}>
                 <Stack direction={'row'} spacing={7}>
                   <CartWidget/>
                   <Button onClick={toggleColorMode}>
                     {colorMode === 'light' ? <MoonIcon /> : <SunIcon />}
                   </Button>
-    
+
                   <Menu>
                     <MenuButton
                       as={Button}
@@ -74,5 +93,5 @@ return (
         </>
     );
 };
+export default NavBar;
 
-export default Navbar;
