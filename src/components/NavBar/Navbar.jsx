@@ -22,7 +22,6 @@ import logo from "../../assets/logonia.png"
 
 const NavBar = () => {
   const { colorMode, toggleColorMode } = useColorMode();
-
   const { category } = useCategory();
 
 return (
