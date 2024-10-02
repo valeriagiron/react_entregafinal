@@ -1,24 +1,24 @@
-import { useState, useEffect } from "react";
-import { getProductById } from "../services/products.services"; // Importación nombrada
+import React from "react";
+import { doc, getDoc } from "firebase/firestore";
+import db from '../Firebase/config';
 
-const useProductsById = (id) => {
-    const [productData, setProductData] = useState(null);
-    const [loading, setLoading] = useState(true);
-  
-    useEffect(() => {
-      getProductById(id)
-        .then((res) => {
-          setProductData(res.data);
-        })
-        .catch((err) => {
-          console.log(err);
-        })
-        .finally(() => {
-          setLoading(false);
-        });
-    }, []);
-  
-    return { productData, loading };
-  };
+const useProductById = (id) => {
+  const [product, setProduct] = React.useState({});
+  const [loading, setLoading] = React.useState(true);
 
-export default useProductsById;
+  React.useEffect(() => {
+    const productItem = doc(db, "products", id);
+    getDoc(productItem)
+      .then((snapshot) => {
+        setProduct({ id: snapshot.id, ...snapshot.data() });
+      })
+      .catch((error) => {
+        console.log(error);
+      })
+      .finally(() => setLoading(false));
+  }, []);
+
+  return { product, loading };
+};
+
+export default useProductById;

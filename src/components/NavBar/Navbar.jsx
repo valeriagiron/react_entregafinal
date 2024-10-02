@@ -12,85 +12,90 @@ import {
   Stack,
   useColorMode,
   Center,
+  Image as ChakraImage,
 } from "@chakra-ui/react";
 import { MoonIcon, SunIcon } from "@chakra-ui/icons";
 import CartWidget from "../CartWidget/CartWidget";
-import useCategory from "../../hooks/useCategory";
 import { Link } from "react-router-dom";
 import logo from "../../assets/logonia.png"
+import useItemsCollection from '../../hooks/useItemsCollection';
+// import {createProductsFirestore} from "../../Helpers";
 
 
 const NavBar = () => {
   const { colorMode, toggleColorMode } = useColorMode();
-  const { category } = useCategory();
+  const { items } = useItemsCollection("categories");
 
-return (
-        <>
-          <Box bg={useColorModeValue('gray.100', 'gray.900')} px={4}>
-            <Flex h={16} alignItems={'center'} justifyContent={'space-between'}>
-            <Box Link to="/" as={Link} cursor="pointer" style={{ marginLeft: 30 }}>
-                <img src={logo} alt="Logo" style={{ height: "50px" }} />
-          </Box>
-              <Box alignContent={"flex-start"} width={"100%"} marginLeft={30}>
+  return (
+    <>
+      <Box bg={useColorModeValue("gray.100", "gray.900")} px={4}>
+        <Flex h={16} alignItems={"center"} justifyContent={"space-between"}>
+          <Box>
+            <Link to="/" style={{ display: 'block', lineHeight: 0 }}>
+              <ChakraImage src={logo} alt="Logo" boxSize="50px" />
+            </Link>
+        </Box>
+        <Menu>
+            <MenuButton as={Link} cursor="pointer" style={{ marginLeft: 30 }}>
+              Categorias
+            </MenuButton>
+            <MenuList height={"fit-content"} overflowY={"scroll"}>
+              {items.map((category) => (
+                <MenuItem key={category.slug}>
+                  <Link to={`/category/${category.slug}`}>{category.name}</Link>
+                </MenuItem>
+              ))}
+            </MenuList>
+          </Menu>
+          {/* <Button onClick={() => createProductsFirestore("products")}>
+            Crear productos
+          </Button> */}
+          <Flex alignItems={"center"}>
+            <Stack direction={"row"} spacing={7}>
+              <CartWidget />
+              <Button onClick={toggleColorMode}>
+                {colorMode === "light" ? <MoonIcon /> : <SunIcon />}
+              </Button>
+
               <Menu>
-
-                  <MenuButton as={Link} cursor="pointer" style={{ marginLeft: 30 }}>
-                    Categorias
-                  </MenuButton>
-                  
-                  <MenuList height={"300px"} overflowY={"scroll"}>
-                    {category.map((category) => (
-                      <MenuItem key={category.slug}>
-                        <Link to={`/category/${category.slug}`}>{category.name}</Link>
-                      </MenuItem>
-                    ))}
-                  </MenuList>
-            </Menu>
-          </Box>
-              <Flex alignItems={'center'}>
-                <Stack direction={'row'} spacing={7}>
-                  <CartWidget/>
-                  <Button onClick={toggleColorMode}>
-                    {colorMode === 'light' ? <MoonIcon /> : <SunIcon />}
-                  </Button>
-
-                  <Menu>
-                    <MenuButton
-                      as={Button}
-                      rounded={'full'}
-                      variant={'link'}
-                      cursor={'pointer'}
-                      minW={0}>
-                      <Avatar
-                        size={'sm'}
-                        src={'https://avatars.dicebear.com/api/male/username.svg'}
-                      />
-                    </MenuButton>
-                    <MenuList alignItems={'center'}>
-                      <br />
-                      <Center>
-                        <Avatar
-                          size={'2xl'}
-                          src={'https://avatars.dicebear.com/api/male/username.svg'}
-                        />
-                      </Center>
-                      <br />
-                      <Center>
-                        <p>Username</p>
-                      </Center>
-                      <br />
-                      <MenuDivider />
-                      <MenuItem>Your Servers</MenuItem>
-                      <MenuItem>Account Settings</MenuItem>
-                      <MenuItem>Logout</MenuItem>
-                    </MenuList>
-                  </Menu>
-                </Stack>
-              </Flex>
-            </Flex>
-          </Box>
-        </>
-    );
+                <MenuButton
+                  as={Button}
+                  rounded={"full"}
+                  variant={"link"}
+                  cursor={"pointer"}
+                  minW={0}
+                >
+                  <Avatar
+                    size={"sm"}
+                    src={"https://avatars.dicebear.com/api/male/username.svg"}
+                  />
+                </MenuButton>
+                <MenuList alignItems={"center"}>
+                  <br />
+                  <Center>
+                    <Avatar
+                      size={"2xl"}
+                      src={"https://avatars.dicebear.com/api/male/username.svg"}
+                    />
+                  </Center>
+                  <br />
+                  <Center>
+                    <p>Username</p>
+                  </Center>
+                  <br />
+                  <MenuDivider />
+                  <MenuItem>Your Servers</MenuItem>
+                  <MenuItem>Account Settings</MenuItem>
+                  <MenuItem>Logout</MenuItem>
+                </MenuList>
+              </Menu>
+            </Stack>
+          </Flex>
+        </Flex>
+      </Box>
+    </>
+  );
 };
+
 export default NavBar;
 

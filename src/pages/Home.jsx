@@ -1,32 +1,24 @@
-// const Home = () => { 
-// return (
-// <div>Home</div>
-// )
-// };
-// export default Home;
-
-
-
-
-import { Spinner, Flex } from "@chakra-ui/react";
-import useProducts from "../hooks/useProducts";
-import ItemListContainer from "../components/ItemListContainer/ItemListContainer";
+import React from "react";
+import ItemListContainer from '../components/ItemListContainer/ItemListContainer';
+import useItemsCollection from '../hooks/useItemsCollection';
+import { Flex, Spinner, Box } from "@chakra-ui/react";
 
 const Home = () => {
-  const { products, loading } = useProducts();
-  console.log("home daata",products)
+  const { items, loading, error } = useItemsCollection("products");
+
   return loading ? (
-    <Flex
-      width={"100%"}
-      height={"90vh"}
-      alignItems={"center"}
-      justifyContent={"center"}
-    >
-      <Spinner size="xl" />
+    <Flex justifyContent={"center"} alignItems={"center"} h={"90vh"}>
+      <Spinner />
     </Flex>
+  ) : error ? (
+    <Box>
+      Hay un error durante la carga de los productos, por favor contactese con
+      soporte.
+    </Box>
   ) : (
-    <ItemListContainer products={products} />
+    <ItemListContainer products={items} />
   );
 };
+
 
 export default Home;
